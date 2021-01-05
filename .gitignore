@@ -127,3 +127,17 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Preference
+
+*.bin
+*.json
+*.txt
+*.csv
+*.zip
+
+*.meta
+*.index
+bert_model.ckpt.data-00000-of-00001
+
+.vscode/
