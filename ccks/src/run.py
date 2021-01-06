@@ -9,9 +9,30 @@ from keras_bert import load_trained_model_from_checkpoint, Tokenizer
 import codecs
 import gc
 from random import choice
-
-
 import tensorflow as tf
+
+import datetime
+import sys
+import time
+
+log_path = '../log/' + example + '_' + element_type + '_' + ('pen' if penalty else 'nopen') + '_' +'{}'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+
+# output to txt 
+class Logger(object):
+    def __init__(self, filename=log_path+'.txt', stream=sys.stdout):
+	    self.terminal = stream
+	    self.log = open(filename, 'a')
+
+    def write(self, message):
+	    self.terminal.write(message)
+	    self.log.write(message)
+
+    def flush(self):
+	    pass
+
+sys.stdout = Logger(log_path+'.txt', sys.stdout)
+
+print('Logging to {}.txt'.format(log_path))
 
 gpu_options = tf.GPUOptions(allow_growth=True)
 sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
@@ -20,7 +41,12 @@ sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
 maxlen = 140  # 140
 learning_rate = 5e-5  # 5e-5
 min_learning_rate = 1e-5  # 1e-5
+foldnums = 5 # default 10
 
+print('=======Arguments=======')
+print('maxlen:\t{}'.format(maxlen))
+print('learning_rate:\t{}'.format(learning_rate))
+print('foldnums :\t{}'.format(foldnums))
 
 config_path = "../bert/chinese_L-12_H-768_A-12/bert_config.json"
 checkpoint_path = "../bert/chinese_L-12_H-768_A-12/bert_model.ckpt"
@@ -115,7 +141,6 @@ D["text"] = D["text"].map(
     .replace("\x04", "")
 )
 
-import re
 
 comp = re.compile(r"(\d{4}-\d{1,2}-\d{1,2})")
 D["text"] = D["text"].map(lambda x: re.sub(comp, "▲", x))
@@ -247,7 +272,6 @@ class AccumOptimizer(Optimizer):
 # 定义模型
 
 import keras.backend as K
-import tensorflow as tf
 from keras.layers import *
 from keras.engine.topology import Layer
 from keras.models import Model
@@ -475,14 +499,14 @@ def evaluate(dev_data):
 
 
 # Model
-flodnums = 10
-kf = KFold(n_splits=flodnums, shuffle=True, random_state=520).split(train_data)
+# foldnums = 5 # default 10
+kf = KFold(n_splits=foldnums, shuffle=True, random_state=520).split(train_data)
 
 score = []
 
 
 for i, (train_fold, test_fold) in enumerate(kf):
-    print("kFlod ", i, "/", flodnums)
+    print("kFlod ", i, "/", foldnums)
     train_ = [train_data[i] for i in train_fold]
     dev_ = [train_data[i] for i in test_fold]
 
@@ -556,7 +580,7 @@ dataid = pd.read_csv(
     model_save_path + "result_k0.txt", sep=",", names=["sid", "company"]
 )[["sid"]]
 
-for i in range(flodnums):
+for i in range(foldnums):
     datak = pd.read_csv(
         model_save_path + "result_k" + str(i) + ".txt",
         sep=",",
