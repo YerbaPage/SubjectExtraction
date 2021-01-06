@@ -65,7 +65,7 @@ https://www.dropbox.com/s/e0ajdb93s2lfdw0/event_type_entity_extract_test.csv?dl=
 
 # 运行环境
 
-- pip install numpy==1.16.4
+- numpy==1.16.4
 
 - tensorflow==1.14.0 
 

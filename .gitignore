@@ -139,5 +139,5 @@ dmypy.json
 *.meta
 *.index
 bert_model.ckpt.data-00000-of-00001
-
+*.weights
 .vscode/
