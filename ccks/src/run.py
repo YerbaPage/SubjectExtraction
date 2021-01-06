@@ -29,7 +29,6 @@ dict_path = '../bert/chinese_L-12_H-768_A-12/vocab.txt'
 
 model_save_path="./"
 
-import os
 if not os.path.exists(model_save_path):
     os.mkdir(model_save_path)
 

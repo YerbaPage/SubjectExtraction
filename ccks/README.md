@@ -71,6 +71,8 @@ https://www.dropbox.com/s/e0ajdb93s2lfdw0/event_type_entity_extract_test.csv?dl=
 
 - keras-bert==0.69.0
 
+- keras-transformer==0.31.0
+
 # 运行方法
 
 ```shell
