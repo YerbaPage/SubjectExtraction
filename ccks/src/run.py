@@ -15,7 +15,7 @@ import datetime
 import sys
 import time
 
-log_path = '../log/' + example + '_' + element_type + '_' + ('pen' if penalty else 'nopen') + '_' +'{}'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+log_path = '../log/log_{}'.format(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
 
 # output to txt 
 class Logger(object):
